@@ -25,11 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        highlighter.cpp \
         main.cpp \
         mainwindow.cpp \
         tab.cpp
 
 HEADERS += \
+        highlighter.h \
         mainwindow.h \
         tab.h
 

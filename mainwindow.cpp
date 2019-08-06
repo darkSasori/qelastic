@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->toolBar->addAction(QIcon(":/icons/add.png"), "New Tab", [this] () {
         addTab();
-    });
+    })->setShortcut(tr("ctrl+n"));
 
     addTab();
 }
@@ -30,6 +30,15 @@ void MainWindow::addTab()
 {
     ui->tabWidget->addTab(new Tab(this), "Tab " + QString::number(ui->tabWidget->count() + 1));
 
-    //auto plus = new QIcon(":/icons/close.png");
-    //ui->tabWidget->tabBar()->setTabButton(0, QTabBar::RightSide, plus);
+    /*
+    auto plus = QIcon(":/icons/close.png");
+    auto btn = new QToolButton();
+    btn->setIcon(plus);
+    btn->setShortcut(tr("ctrl+w"));
+    ui->tabWidget->tabBar()->setTabButton(i, QTabBar::RightSide, btn);
+    connect(btn, &QToolButton::clicked, this, [this, i] () {
+        ui->tabWidget->tabBar()->removeTab(i);
+        qDebug() << "Clicked: " << i;
+    });
+    */
 }
