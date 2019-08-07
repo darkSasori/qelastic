@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,11 +28,13 @@ SOURCES += \
         highlighter.cpp \
         main.cpp \
         mainwindow.cpp \
+        qjsonmodel.cpp \
         tab.cpp
 
 HEADERS += \
         highlighter.h \
         mainwindow.h \
+        qjsonmodel.h \
         tab.h
 
 FORMS += \

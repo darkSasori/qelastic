@@ -29,16 +29,11 @@ MainWindow::~MainWindow()
 void MainWindow::addTab()
 {
     ui->tabWidget->addTab(new Tab(this), "Tab " + QString::number(ui->tabWidget->count() + 1));
+    ui->tabWidget->setTabsClosable(true);
+    connect(ui->tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::closeTab);
+}
 
-    /*
-    auto plus = QIcon(":/icons/close.png");
-    auto btn = new QToolButton();
-    btn->setIcon(plus);
-    btn->setShortcut(tr("ctrl+w"));
-    ui->tabWidget->tabBar()->setTabButton(i, QTabBar::RightSide, btn);
-    connect(btn, &QToolButton::clicked, this, [this, i] () {
-        ui->tabWidget->tabBar()->removeTab(i);
-        qDebug() << "Clicked: " << i;
-    });
-    */
+void MainWindow::closeTab(int i)
+{
+    ui->tabWidget->removeTab(i);
 }
