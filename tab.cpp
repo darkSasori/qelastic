@@ -2,6 +2,7 @@
 #include "ui_tab.h"
 #include "highlighter.h"
 #include <string>
+#include <QMessageBox>
 
 #ifdef QT_DEBUG
 #include <QDebug>
@@ -19,6 +20,7 @@ Tab::Tab(QWidget *parent) :
 
     ui->btnSend->setShortcut(tr("ctrl+e"));
     ui->result->setModel(model);
+    ui->lineURL->setText("http://s-elasticsearch.internal.socialbase.com.br:9200");
 
     connect(ui->btnSend, &QPushButton::clicked, this, &Tab::clickedSend);
     connect(manager, &QNetworkAccessManager::finished, this, &Tab::finished);
@@ -31,15 +33,17 @@ Tab::~Tab()
 
 void Tab::clickedSend(bool)
 {
-    qDebug() << "Start request";
     manager->get(QNetworkRequest(QUrl(ui->lineURL->text())));
 }
 
 void Tab::finished(QNetworkReply *reply)
 {
     if (reply->error()) {
-        qDebug() << "Error: " << reply->errorString();
+        auto msgBox = new QMessageBox;
+        msgBox->setText(reply->errorString());
+        msgBox->exec();
         return;
     }
-    qDebug() << "ok";
+    model->load(reply);
+    ui->result->expandAll();
 }
