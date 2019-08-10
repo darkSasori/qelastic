@@ -27,6 +27,20 @@ private:
     Ui::Tab *ui;
     QJsonModel *model;
     QNetworkAccessManager *manager;
+
+
+    const QStringList methods = QStringList()
+            << "GET"
+            << "POST"
+            << "PUT"
+            << "DELETE";
+
+    enum {
+        METHOD_GET,
+        METHOD_POST,
+        METHOD_PUT,
+        METHOD_DELETE
+    };
 };
 
 #endif // TAB_H
