@@ -14,7 +14,8 @@ Tab::Tab(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    auto highlighter = new Highlighter(ui->query->document());
+    ui->method->addItems(methods);
+
     model = new QJsonModel;
     manager = new QNetworkAccessManager(this);
 
@@ -34,15 +35,36 @@ void Tab::clickedSend(bool)
 {
     auto request = QNetworkRequest(QUrl(ui->lineURL->text()));
     request.setHeader(QNetworkRequest::KnownHeaders::ContentTypeHeader, "application/json");
-    manager->post(request, ui->query->toPlainText().toUtf8());
+
+    switch (ui->method->currentIndex()) {
+    case Tab::METHOD_GET:
+        manager->get(request);
+        break;
+    case Tab::METHOD_POST:
+        manager->post(request, ui->query->toPlainText().toUtf8());
+        break;
+    case Tab::METHOD_PUT:
+        manager->put(request, ui->query->toPlainText().toUtf8());
+        break;
+    case Tab::METHOD_DELETE:
+        auto reply = QMessageBox::question(
+                    this,
+                    "Do you want call delete on this URL?",
+                    ui->lineURL->text(),
+                    QMessageBox::Yes | QMessageBox::No,
+                    QMessageBox::No
+                    );
+        if (reply == QMessageBox::Yes) {
+            manager->deleteResource(request);
+        }
+        break;
+    }
 }
 
 void Tab::finished(QNetworkReply *reply)
 {
     if (reply->error()) {
-        auto msgBox = new QMessageBox;
-        msgBox->setText(reply->errorString());
-        msgBox->exec();
+        QMessageBox::warning(this, "Error", reply->errorString());
         return;
     }
     model->load(reply);

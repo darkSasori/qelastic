@@ -26,6 +26,9 @@
      <item>
       <widget class="QLineEdit" name="lineURL"/>
      </item>
+     <item>
+      <widget class="QComboBox" name="method"/>
+     </item>
     </layout>
    </item>
    <item>
