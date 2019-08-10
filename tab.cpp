@@ -20,7 +20,6 @@ Tab::Tab(QWidget *parent) :
 
     ui->btnSend->setShortcut(tr("ctrl+e"));
     ui->result->setModel(model);
-    ui->lineURL->setText("http://s-elasticsearch.internal.socialbase.com.br:9200");
 
     connect(ui->btnSend, &QPushButton::clicked, this, &Tab::clickedSend);
     connect(manager, &QNetworkAccessManager::finished, this, &Tab::finished);
@@ -33,7 +32,9 @@ Tab::~Tab()
 
 void Tab::clickedSend(bool)
 {
-    manager->get(QNetworkRequest(QUrl(ui->lineURL->text())));
+    auto request = QNetworkRequest(QUrl(ui->lineURL->text()));
+    request.setHeader(QNetworkRequest::KnownHeaders::ContentTypeHeader, "application/json");
+    manager->post(request, ui->query->toPlainText().toUtf8());
 }
 
 void Tab::finished(QNetworkReply *reply)
@@ -45,5 +46,5 @@ void Tab::finished(QNetworkReply *reply)
         return;
     }
     model->load(reply);
-    ui->result->expandAll();
+    ui->result->expandToDepth(3);
 }
