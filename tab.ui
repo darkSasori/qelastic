@@ -17,6 +17,9 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
+      <widget class="QComboBox" name="method"/>
+     </item>
+     <item>
       <widget class="QLabel" name="labelURL">
        <property name="text">
         <string>URL</string>
@@ -25,9 +28,6 @@
      </item>
      <item>
       <widget class="QLineEdit" name="lineURL"/>
-     </item>
-     <item>
-      <widget class="QComboBox" name="method"/>
      </item>
     </layout>
    </item>
