@@ -57,6 +57,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="btnFormatter">
+       <property name="text">
+        <string>Formatter</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="btnSend">
        <property name="text">
         <string>Send</string>

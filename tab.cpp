@@ -20,10 +20,12 @@ Tab::Tab(QWidget *parent) :
     manager = new QNetworkAccessManager(this);
 
     ui->btnSend->setShortcut(tr("ctrl+e"));
+    ui->btnFormatter->setShortcut(tr("ctrl+f"));
     ui->result->setModel(model);
 
     connect(ui->btnSend, &QPushButton::clicked, this, &Tab::clickedSend);
     connect(manager, &QNetworkAccessManager::finished, this, &Tab::finished);
+    connect(ui->btnFormatter, &QPushButton::clicked, this, &Tab::formatter);
 }
 
 Tab::~Tab()
@@ -33,6 +35,7 @@ Tab::~Tab()
 
 void Tab::clickedSend(bool)
 {
+
     auto request = QNetworkRequest(QUrl(ui->lineURL->text()));
     request.setHeader(QNetworkRequest::KnownHeaders::ContentTypeHeader, "application/json");
 
@@ -59,6 +62,13 @@ void Tab::clickedSend(bool)
         }
         break;
     }
+}
+
+void Tab::formatter(bool)
+{
+    auto tmp = new QJsonModel;
+    tmp->loadJson(ui->query->toPlainText().toUtf8());
+    ui->query->setText(tmp->json().toJson());
 }
 
 void Tab::finished(QNetworkReply *reply)

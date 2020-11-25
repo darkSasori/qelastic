@@ -22,6 +22,7 @@ public:
 public slots:
     void clickedSend(bool checked = false);
     void finished(QNetworkReply *);
+    void formatter(bool checked = false);
 
 private:
     Ui::Tab *ui;
