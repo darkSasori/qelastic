@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QStringListModel>
 #include "qjsonmodel.h"
 
 namespace Ui {
@@ -28,19 +29,22 @@ private:
     Ui::Tab *ui;
     QJsonModel *model;
     QNetworkAccessManager *manager;
-
+    QStringListModel *listOutputModel;
+    QStringList listOutput;
 
     const QStringList methods = QStringList()
             << "GET"
             << "POST"
             << "PUT"
-            << "DELETE";
+            << "DELETE"
+            << "HEAD";
 
     enum {
         METHOD_GET,
         METHOD_POST,
         METHOD_PUT,
-        METHOD_DELETE
+        METHOD_DELETE,
+        METHOD_HEAD
     };
 };
 
