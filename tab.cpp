@@ -14,18 +14,25 @@ Tab::Tab(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->method->addItems(methods);
-
     model = new QJsonModel;
     manager = new QNetworkAccessManager(this);
+    listOutputModel = new QStringListModel();
+    listOutput = QStringList();
 
+    listOutputModel->setStringList(listOutput);
+
+    ui->method->addItems(methods);
+    ui->lineURL->setText("http://localhost:9200");
     ui->btnSend->setShortcut(tr("ctrl+e"));
     ui->btnFormatter->setShortcut(tr("ctrl+f"));
+    ui->btnClear->setShortcut((tr("ctrl+l")));
     ui->result->setModel(model);
+    ui->listOutput->setModel(listOutputModel);
 
     connect(ui->btnSend, &QPushButton::clicked, this, &Tab::clickedSend);
     connect(manager, &QNetworkAccessManager::finished, this, &Tab::finished);
     connect(ui->btnFormatter, &QPushButton::clicked, this, &Tab::formatter);
+    connect(ui->btnClear, &QPushButton::clicked, this, &Tab::clear);
 }
 
 Tab::~Tab()
@@ -35,11 +42,11 @@ Tab::~Tab()
 
 void Tab::clickedSend(bool)
 {
-
     auto request = QNetworkRequest(QUrl(ui->lineURL->text()));
     request.setHeader(QNetworkRequest::KnownHeaders::ContentTypeHeader, "application/json");
 
-    switch (ui->method->currentIndex()) {
+    auto index = ui->method->currentIndex();
+    switch (index) {
     case Tab::METHOD_GET:
         manager->get(request);
         break;
@@ -48,6 +55,9 @@ void Tab::clickedSend(bool)
         break;
     case Tab::METHOD_PUT:
         manager->put(request, ui->query->toPlainText().toUtf8());
+        break;
+    case Tab::METHOD_HEAD:
+        manager->head(request);
         break;
     case Tab::METHOD_DELETE:
         auto reply = QMessageBox::question(
@@ -62,6 +72,16 @@ void Tab::clickedSend(bool)
         }
         break;
     }
+
+    QString str;
+    str += "[";
+    str += methods[index];
+    str += "] ";
+    str += ui->lineURL->text();
+    str += " started";
+    listOutput.clear();
+    listOutput.append(str);
+    listOutputModel->setStringList(listOutput);
 }
 
 void Tab::formatter(bool)
@@ -74,9 +94,26 @@ void Tab::formatter(bool)
 void Tab::finished(QNetworkReply *reply)
 {
     if (reply->error()) {
-        QMessageBox::warning(this, "Error", reply->errorString());
+        QString str = "result error: ";
+        str += reply->errorString();
+        listOutput.append(str);
+        listOutputModel->setStringList(listOutput);
+
         return;
     }
     model->load(reply);
     ui->result->expandToDepth(3);
+
+    QString str = "result success";
+    listOutput.append(str);
+    listOutputModel->setStringList(listOutput);
+}
+
+
+void Tab::clear(bool)
+{
+    model->loadJson(QByteArray("{}"));
+
+    listOutput.clear();
+    listOutputModel->setStringList(listOutput);
 }

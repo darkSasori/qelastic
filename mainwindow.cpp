@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
         addTab();
     })->setShortcut(tr("ctrl+n"));
 
+    QWidget::showMaximized();
     addTab();
 }
 
